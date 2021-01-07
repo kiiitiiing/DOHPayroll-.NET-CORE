@@ -1,0 +1,498 @@
+﻿@model JoPayrollModel
+
+
+<div class="col-12 col-sm-12">
+    <div class="card card-primary card-tabs">
+        <div class="card-header p-0 pt-1 form-inline">
+            <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                <li class="pt-2 px-3"><h3 class="card-title">Payroll for <span class="text-bold">@Model.Fullname.ToUpper()</span></h3></li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="edit-payroll-tab" data-toggle="pill" href="#edit-payroll" role="tab" aria-controls="edit-payroll" aria-selected="true">
+                        Edit
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="payroll-list-tab" data-toggle="pill" href="#payroll-list" role="tab" aria-controls="payroll-list-label" aria-selected="false">
+                        List
+                    </a>
+                </li>
+            </ul>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool text-danger" data-card-widget="remove" style="position: absolute; right: 20px !important; top: 20px !important;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-two-tabContent">
+                <div class="tab-pane fade show active" id="edit-payroll" role="tabpanel" aria-labelledby="edit-payroll">
+                    <form asp-controller="PartialView" asp-action="EditJoPayroll" method="post" id="jo_payroll_form">
+
+                        <input type="text" class="hidden" id="userid" asp-for="ID" />
+                        <input type="text" class="hidden" id="fname" asp-for="Fname" />
+                        <input type="text" class="hidden" id="mname" asp-for="Mname" />
+                        <input type="text" class="hidden" id="lname" asp-for="Lname" />
+                        <input type="text" class="hidden" id="designation" asp-for="Designation" />
+                        <input type="text" class="hidden" id="payroll_id" asp-for="PayrollId" />
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input class="form-control date_picker" type="text" id="jo_payroll_date" asp-for="Date" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Options</label>
+                                    <select asp-for="Range" id="jo_payroll_range" class="form-control" required>
+                                        <option value="">Select Range</option>
+                                        <option value="1">First Half of Month</option>
+                                        <option value="2">Second Half of Month</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Adjustment</label>
+                                    <input asp-for="Adjustment" type="number" value="@Model.Adjustment.ToString("F2")" class="form-control input-data" id="jo_adjustment" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Monthly Rate</label>
+                                    <input asp-for="Salary" type="number" id="jo_salary" class="form-control input-data" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Working Days</label>
+                                    <input asp-for="WorkingDays" type="number" class="form-control input-data" id="jo_working_days" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Absent Days</label><br />
+                                    <input type="text" class="form-control" id="jo_absent_date" placeholder="Choose Date" readonly />
+                                    <input type="hidden" asp-for="AbsentDays" class="form-control" id="jo_absent_date_line" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <table id="jo_date_list" class="table table-borderless">
+                                        @if (!string.IsNullOrEmpty(Model.AbsentDays))
+                                        {
+                                            if (Model.AbsentDays.Split(",").Length > 0)
+                                            {
+                                                for (int x = 0; x < Model.AbsentDays.Split(',').Length; x++)
+                                                {
+                                                    <tr>
+                                                        <td class="date_inside">@Model.AbsentDays.Split(',')[x]</td>
+                                                        <td>
+                                                            <i class="fas fa-times text-danger" style="cursor: pointer;" onclick="RemoveDateItem($(this).parent().parent())"></i>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Minutes (Late/Undertime)</label>
+                                    <input asp-for="MinutesLate" type="number" id="jo_minutes_late" class="form-control input-data" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Deduction(Late/Undertime/Absent)</label>
+                                    <input asp-for="Deduction" type="number" class="form-control" id="jo_deduction" value="@Model.Deduction.ToString("F2")" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Net Amount</label>
+                                    <input asp-for="NetAmount" type="number" class="form-control" id="jo_net_amount" value="@Model.NetAmount.ToString("F2")" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div id="deductions">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>5% EWT</label>
+                                        <input asp-for="EWT" type="number" class="form-control input-data" value="@Model.EWT.ToString("F2")" id="jo_ewt" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>3% Professional Tax</label>
+                                        <input asp-for="ProfessionalTax" type="number" class="form-control input-data" id="jo_prof_tax" value="@Model.ProfessionalTax.ToString("F2")" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <label>HWMPC</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Payment</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Paid</label>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="HWMPC.Item" type="number" value="@Model.HWMPC.Item.ToString("F2")" class="form-control input-data input-group" id="jo_coop" required readonly />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="HWMPC.NoPayment" type="number" class="form-control input-data input-group" id="jo_coop_payment" required readonly />
+
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <div class="input-group add-on">
+                                                            <input asp-for="HWMPC.NoPaid" type="number" class="form-control input-data input-group" id="jo_coop_paid" required readonly />
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-success" id="edit_coop" value="coop" type="button" onclick="UpdatePayments($(this));">
+                                                                    <i id="coop_icon" class="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Other Adjustment</label>
+                                        <input asp-for="OtherAdjustments" type="number" value="@Model.OtherAdjustments.ToString("F2")" class="form-control input-data" id="jo_other_adjustment" required />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <label>Pag-Ibig</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Payment</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Paid</label>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="Pagibig.Item" type="number" value="@Model.Pagibig.Item.ToString("F2")" class="form-control input-data" id="jo_pagibig" readonly required />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="Pagibig.NoPayment" type="number" class="form-control input-data" id="jo_pagibig_payment" required readonly />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <div class="input-group add-on">
+                                                            <input asp-for="Pagibig.NoPaid" type="number" class="form-control input-data" id="jo_pagibig_paid" required readonly />
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-success" id="edit_pagibig" value="pagibig" type="button" onclick="UpdatePayments($(this));">
+                                                                    <i id="pagibig_icon" class="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <label>PHIC</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Payment</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Paid</label>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="PHIC.Item" type="number" value="@Model.PHIC.Item.ToString("F2")" class="form-control input-data" id="jo_phic" readonly required />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="PHIC.NoPayment" type="number" class="form-control input-data" id="jo_phic_payment" required readonly />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <div class="input-group add-on">
+                                                            <input asp-for="PHIC.NoPaid" type="number" class="form-control input-data" id="jo_phic_paid" required readonly />
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-success" id="edit_phic" value="phic" type="button" onclick="UpdatePayments($(this));">
+                                                                    <i id="phic_icon" class="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <label>GSIS</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Payment</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Paid</label>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="GSIS.Item" type="number" value="@Model.GSIS.Item.ToString("F2")" class="form-control input-data" id="jo_gsis" readonly required />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="GSIS.NoPayment" type="number" class="form-control input-data" id="jo_gsis_payment" required readonly />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <div class="input-group add-on">
+                                                            <input asp-for="GSIS.NoPaid" type="number" class="form-control input-data" id="jo_gsis_paid" required readonly />
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-success" id="edit_gsis" value="gsis" type="button" onclick="UpdatePayments($(this));">
+                                                                    <i id="gsis_icon" class="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <label>Pag-Ibig Loan</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Payment</label>
+                                                </th>
+                                                <th>
+                                                    <label>No. Paid</label>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="PagibigLoan.Item" type="number" value="@Model.PagibigLoan.Item.ToString("F2")" class="form-control input-data" id="jo_pagibig_loan" readonly required />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input asp-for="PagibigLoan.NoPayment" type="number" class="form-control input-data" id="jo_pagibig_loan_payment" required readonly />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <div class="input-group add-on">
+                                                            <input asp-for="PagibigLoan.NoPaid" type="number" class="form-control input-data" id="jo_pagibig_loan_paid" required readonly />
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-success" id="edit_pagibig_loan" value="pagibig_loan" type="button" onclick="UpdatePayments($(this));">
+                                                                    <i id="pagibig_loan_icon" class="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Total Deductions</label>
+                                        <input asp-for="TotalDeductions" type="number" value="@Model.TotalDeductions.ToString("F2")" class="form-control" id="jo_total_deductions" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Net Pay</label>
+                                        <input asp-for="NetPay" type="number" value="@Model.NetPay.ToString("F2")" class="form-control" id="jo_total_amount" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Remarks</label>
+                                        <textarea asp-for="Remarks" rows="7" id="jo_remarks" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                                <button type="button" class="btn btn-primary form-control" data-save="tab" id="jo_save" value="Save">
+                                    @if(Model.PayrollId == 0)
+                                    {
+                                        <span>Save</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Update</span>
+                                    }
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="payroll-list" data-save="tab" role="tabpanel" aria-labelledby="payroll-list-label">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#jo_salary").popover({
+            container: 'body',
+            title: 'Edit Salary',
+            html: true,
+            placement: 'top',
+            sanitize: false,
+            content: function () {
+                return $("#edit_salary_popover").html();
+            }
+        });
+
+        $('#jo_absent_date').datepicker({
+            format: "mm/dd/yyyy",
+            multidate: true
+        }).on('changeDate', function (e) {
+            AppendDate(e.format());
+            $('#jo_absent_date').val('');
+        }).on('hide', function (e) {
+            $(this).datepicker('clearDates');
+        });
+
+        $('.date_picker').on('changeDate', function () {
+            $(this).datepicker('hide');
+        });
+        $('.date_picker').datepicker({
+            format: "MM yyyy",
+            startView: "months",
+            minViewMode: "months"
+        });
+
+        $('#jo_working_days,#jo_adjustment,#jo_minutes_late,#jo_ewt,#jo_prof_tax,#jo_other_adjustment').on('change', function () {
+            var value = $(this).val();
+            if (value == '') {
+                value = 0;
+            }
+            if ($(this).attr('id') == 'jo_working_days' || $(this).attr('id') == 'jo_minutes_late') {
+                $(this).val(value);
+            }
+            else {
+                $(this).val(parseFloat(value).toFixed(2));
+            }
+            ComputeJoDeductions();
+        });
+
+        $('#jo_payroll_date,#jo_payroll_range').on('change', function () {
+            if (($('#jo_payroll_date').val() != '') && ($('#jo_payroll_range').val() != '')) {
+                var userid = $('#jo_payroll_form').find('#userid').val();
+                var date = $('#jo_payroll_date').val();
+                var option = $('#jo_payroll_range').val();
+                console.log(userid);
+                $.when(GetMinsLateAbsences(userid, date, option, 'jo')).done(function (output) {
+                    var mins = output.split(' ')[0];
+                    var absences = output.split(' ')[1];
+                    var working_days = output.split(' ')[2];
+
+                    $('#jo_date_list').empty();
+
+                    for (x = 0; x < absences.split(',').length; x++) {
+                        AppendDate(absences.split(',')[x], x);
+                    }
+
+                    $('#jo_minutes_late').val(mins);
+                    $('#jo_working_days').val(working_days);
+
+                    ComputeJoDeductions();
+                });
+                
+            }
+        });
+    });
+</script>

@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewData["Title"] = "Regular";
+}
+
+
+<div class="row">
+    <div class="card card-outline card-success col-md-12">
+        <div class="card-header">
+            <div class="card-title">
+                <h5>Regular</h5>
+            </div>
+            <div class="form-inline ml-3 fa-pull-right">
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" name="search" placeholder="Search" value="@ViewBag.Search" id="search_value" type="text" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-sm btn-default jo_search" type="button" title="Search" onclick="LoadRegularList('@ViewBag.Type', $('#search_value').val());">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="input-group-append">
+                        <div class="btn-group btn-group-sm" style="cursor: pointer;">
+                            <a class="btn btn-sm btn-default regular_search dropdown-toggle" title="Generate Payroll" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-file-alt"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" id="filter_cp_rata" onclick="FilterCPRATA();">
+                                    Filter RATA/Cellphone
+                                </a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#generate_regular_payroll" data-backdrop="static">
+                                    Payroll
+                                </a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#generate_rata" data-backdrop="static">
+                                    RATA
+                                </a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#generate_cellphone" data-backdrop="static">
+                                    Cellphone
+                                </a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#generate_hazard" data-backdrop="static">
+                                    Hazard
+                                </a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#generate_subsistence" data-backdrop="static">
+                                    Subsistence
+                                </a>
+                                <a class="dropdown-item" asp-controller="OtherPayroll" asp-action="TestPDF" target="_blank">
+                                    Test pdf
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" id="regular_container">
+        </div>
+    </div>
+</div>
+
+<div class="row" id="regular_payroll_container">
+</div>
+
+
+<script>
+    var flag = '';
+    $(document).ready(function () {
+        LoadRegularList('@ViewBag.Type', '', flag);
+
+        $('#search_value').on('keypress', function (e) {
+            if (e.which == 13) {
+                LoadRegularList('@ViewBag.Type', $('#search_value').val(), flag);
+            }
+        })
+
+    });
+
+    function FilterCPRATA() {
+        if ($('#filter_cp_rata').text().includes('Cellphone')) {
+            flag = 'true';
+            $('#filter_cp_rata').html('<< Back')
+        }
+        else {
+            flag = '';
+            $('#filter_cp_rata').html('RATA & Cellphone')
+        }
+        LoadRegularList('@ViewBag.Type', $('#search_value').val(), flag);
+    }
+</script>

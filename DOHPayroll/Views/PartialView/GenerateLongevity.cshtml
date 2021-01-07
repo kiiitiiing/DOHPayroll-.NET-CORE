@@ -1,0 +1,125 @@
+﻿@model LongevityModel
+
+
+<div class="col-12 col-sm-12">
+    <div class="card card-success card-tabs">
+        <div class="card-header p-0 pt-1 form-inline">
+            <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                <li class="pt-2 px-3"><h3 class="card-title">Longevity for <span class="text-bold">@Model.Fullname.ToUpper()</span></h3></li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="edit-longevity-tab" data-toggle="pill" href="#edit-regular-longevity" role="tab" aria-controls="edit-payroll" aria-selected="true">
+                        Edit
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="longevity-list-tab" data-toggle="pill" href="#regular-longevity-list" role="tab" aria-controls="payroll-list-label" aria-selected="false">
+                        List
+                    </a>
+                </li>
+            </ul>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool text-danger" data-card-widget="remove" style="position: absolute; right: 20px !important; top: 20px !important;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-two-tabContent">
+                <div class="tab-pane fade show active" id="edit-regular-longevity" role="tabpanel" aria-labelledby="edit-payroll">
+                    <form asp-action="GenerateLongevity" asp-controller="PartialView" method="post" id="longevity_form">
+                        <input type="hidden" id="hazard_id" asp-for="LongevityId" />
+                        <input type="hidden" id="userid" asp-for="ID" />
+                        <input type="hidden" id="fname" asp-for="Fname" />
+                        <input type="hidden" id="mname" asp-for="Mname" />
+                        <input type="hidden" id="lname" asp-for="Lname" />
+
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input class="form-control date_picker" type="text" id="subsistence_date" asp-for="Date" placeholder="Select Date" tabindex="0" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Disallowance</label>
+                                    <input type="number" asp-for="Disallowance" id="longevity_disallowance" class="form-control input-data" tabindex="1" value="@Model.Disallowance.ToString("F2")" required />
+                                </div>
+                            </div>
+                            @for (int x = 0; x < 5; x++)
+                            {
+                                <input type="hidden" asp-for="Salaries[x].Index" value="@Model.Salaries[x].Index" />
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Salary</label>
+                                        <input type="number" asp-for="Salaries[x].Salary" id="salary_@(x+1)" class="form-control input-data salary" tabindex="@(x+2)" value="@Model.Salaries[x].Salary.ToString("F2")" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>LP(@(x+1))</label>
+                                        <input type="number" asp-for="Salaries[x].LP" id="lp_@(x+1)" class="form-control readonly bg-gray-light" value="@Model.Salaries[x].LP.ToString("F2")" readonly />
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>TOTAL LP/MO</label>
+                                    <input type="number" asp-for="TotalLPMO" id="longevity_total" class="form-control" value="@Model.TotalLPMO.ToString("F2")" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (ViewBag.Errors != null)
+                        {
+                            <div class="row" style="margin-top: 20px;">
+                                <div class="col-sm-12 center" style="align-content:center">
+                                    <span class="text-danger text-sm">Please Input requred fields.</span>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                                <button type="button" class="btn btn-primary form-control" data-save="tab" id="subsistence_save" value="Save">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="regular-longevity-list" role="tabpanel" aria-labelledby="payroll-list-label">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#edit-longevity-tab,#longevity-list-tab').on('click', function (e) {
+            $(window).scrollTop($('#regular_payroll_container').offset().top);
+        });
+
+        $('.date_picker').datepicker({
+            format: "MM yyyy",
+            startView: "months",
+            minViewMode: "months"
+        }).on('changeDate', function () {
+            $(this).datepicker('hide');
+        });
+
+        $('#longevity_form').find('.input-data').keyup(function () {
+            ComputeLongevity();
+        });
+
+        $('#longevity_form').find('.input-data').change(function () {
+            if ($(this).attr('id') !== 'subsistence_days') {
+                $(this).val(roundOff($(this).val()));
+            }
+        });
+    });
+</script>

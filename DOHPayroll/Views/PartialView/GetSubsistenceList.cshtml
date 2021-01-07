@@ -1,0 +1,56 @@
+﻿@model PaginatedList<SubsistenceModel>
+
+<div class="row">
+    @if (Model.Count() > 0)
+    {
+        @foreach (var subistence in Model)
+        {
+            <div class="col-md-4">
+                <div class="small-box bg-gradient-white" style="padding-bottom: 5px !important;">
+                    <div class="inner">
+                        <h5>@subistence.ID</h5>
+
+                        <p>@subistence.Date</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="form-inline" style="margin-left: 5px !important;">
+                        <button class="btn btn-sm btn-danger btn-margin-right"
+                                value="@subistence.SubsistenceId"
+                                data-userid="@subistence.ID"
+                                onclick="DeleteDbRow($(this).val(), 'subsistence', $(this).data('userid'));">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning col-md-12">
+            <span class="text-lg">
+                <i class="fa fa-exclamation-triangle"></i>
+                &nbsp;No data found!
+            </span>
+        </div>
+    }
+</div>
+
+<div class="page-list-footer">
+    @await Html.PartialAsync("~/Views/Shared/_PageListsPartial.cshtml", new PageListModel
+{
+    Action = Model._action,
+    HasNextPage = Model.HasNextPage,
+    HasPreviousPage = Model.HasPreviousPage,
+    PageIndex = Model._pageIndex,
+    TotalPages = Model._totalPages,
+    Container = "regular-subsistence-list",
+    Parameters = new Dictionary<string, string>
+    {
+        { "userid", ViewBag.UserID},
+        { "page", Model._pageIndex.ToString() }
+    }
+})
+</div>

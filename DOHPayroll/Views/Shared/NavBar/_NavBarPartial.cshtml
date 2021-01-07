@@ -1,0 +1,81 @@
+﻿<ul class="navbar-nav flex-grow-1">
+    <!-- NAVBAR -->
+    @if (User.FindFirstValue(ClaimTypes.Role) == "user")
+    {
+        <li class="nav-item ">
+            <a class="nav-link" asp-area="" asp-controller="Resuhems" asp-action="Dashboard">
+                <i class="fa fa-home"></i>
+                &nbsp;Home
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" asp-area="" asp-controller="Resuhems" asp-action="DischargedPatients">
+                <i class="fas fa-user-injured"></i>
+                &nbsp;Discharged
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" asp-area="" asp-controller="Resuhems" asp-action="AddPatient">
+                <i class="fa fa-user-injured"></i>
+                &nbsp;Add patient
+            </a>
+        </li>
+    }
+
+    @if (User.FindFirstValue(ClaimTypes.Role) == "admin")
+    {
+        <li class="nav-item dropdown">
+            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">
+                <i class="fa fa-users"></i>&nbsp;
+                Job Orders
+            </a>
+            <ul class="dropdown-menu border-0 shadow">
+                <li>
+                    <a class="dropdown-item" asp-controller="Employees" asp-action="JobOrder" asp-route-index="0">
+                        <i class="fa fa-user"></i>&nbsp;
+                        ATM
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Employees" asp-action="JobOrder" asp-route-index="1">
+                        <i class="fa fa-user"></i>&nbsp;
+                        CASH CARD
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Employees" asp-action="JobOrder" asp-route-index="2">
+                        <i class="fa fa-user"></i>&nbsp;
+                        W/O LBP CARD
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-controller="Employees" asp-action="JobOrder" asp-route-index="3">
+                        <i class="fa fa-user"></i>&nbsp;
+                        UNDER VTF
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" asp-area="" asp-controller="Employees" asp-action="Regular">
+                <i class="fa fa-users"></i>
+                &nbsp;Regulars
+            </a>
+        </li>
+        <li class="nav-item ">
+            <a class="nav-link" asp-area="" asp-controller="Report" asp-action="Generate">
+                <i class="fas fa-file-export"></i>
+                &nbsp;Reports
+            </a>
+        </li>
+
+        <!-- ACCOUNT -->
+
+    }
+    <li class="nav-item fa-pull-right">
+        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">
+            <i class="fa fa-sign-out-alt"></i>
+            &nbsp;Logout
+        </a>
+    </li>
+</ul>

@@ -1,0 +1,69 @@
+﻿@model PaginatedList<RegularPayrollModel>
+
+<div class="row">
+    @if (Model.Count() > 0)
+    {
+        @foreach (var payroll in Model)
+        {
+            var date = new DateTime(payroll.Year, payroll.Month, 1);
+            <div class="col-md-4">
+                <div class="small-box bg-gradient-white" style="padding-bottom: 5px !important;">
+                    <div class="inner">
+                        <h5>@payroll.ID</h5>
+
+                        <p>@date.ToString("MMMM yyyy")</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="form-inline" style="margin-left: 5px !important;">
+                        <button class="btn btn-sm btn-danger btn-margin-right" 
+                                value="@payroll.PayrollId" 
+                                data-userid="@payroll.ID" 
+                                onclick="DeleteDbRow($(this).val(), 'regular_payroll', $(this).data('userid'));">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        @if (payroll.Month == DateTime.Now.Month && payroll.Year == DateTime.Now.Year)
+                        {
+                            <button class="btn btn-sm btn-primary btn-margin-right">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        }
+                        <a class="btn btn-sm btn-success btn-margin-right" target="_blank" asp-action="RegularPayslip" asp-controller="Payslip"
+                           asp-route-userid="@payroll.ID"
+                           asp-route-month="@payroll.Month"
+                           asp-route-year="@payroll.Year">
+                            <i class="fas fa-file-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning col-md-12">
+            <span class="text-lg">
+                <i class="fa fa-exclamation-triangle"></i>
+                &nbsp;No data found!
+            </span>
+        </div>
+    }
+</div>
+
+<div class="page-list-footer">
+    @await Html.PartialAsync("~/Views/Shared/_PageListsPartial.cshtml", new PageListModel
+{
+    Action = Model._action,
+    HasNextPage = Model.HasNextPage,
+    HasPreviousPage = Model.HasPreviousPage,
+    PageIndex = Model._pageIndex,
+    TotalPages = Model._totalPages,
+    Container = "regular-payroll-list",
+    Parameters = new Dictionary<string, string>
+    {
+        { "userid", ViewBag.UserID},
+        { "page", Model._pageIndex.ToString() }
+    }
+})
+</div>

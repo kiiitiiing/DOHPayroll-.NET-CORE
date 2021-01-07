@@ -1,0 +1,1023 @@
+﻿@model RegularPayrollModel
+
+
+<div class="col-12 col-sm-12">
+    <div class="card card-primary card-tabs">
+        <div class="card-header p-0 pt-1 form-inline">
+            <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                <li class="pt-2 px-3"><h3 class="card-title">Payroll for <span class="text-bold">@Model.Fullname.ToUpper()</span></h3></li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="edit-payroll-tab" data-toggle="pill" href="#edit-regular-payroll" role="tab" aria-controls="edit-payroll" aria-selected="true">
+                        Edit
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="payroll-list-tab" data-toggle="pill" href="#regular-payroll-list" role="tab" aria-controls="payroll-list-label" aria-selected="false">
+                        List
+                    </a>
+                </li>
+            </ul>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool text-danger" data-card-widget="remove" style="position: absolute; right: 20px !important; top: 20px !important;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-two-tabContent">
+                <div class="tab-pane fade show active" id="edit-regular-payroll" role="tabpanel" aria-labelledby="edit-payroll">
+                    <form asp-action="EditRegularPayroll" asp-controller="PartialView" method="post" id="regular_create_payroll">
+                        <input type="hidden" id="payroll_id" asp-for="PayrollId" />
+                        <input type="hidden" id="userid" asp-for="ID" />
+                        <input type="hidden" id="fname" asp-for="Fname" />
+                        <input type="hidden" id="mname" asp-for="Mname" />
+                        <input type="hidden" id="lname" asp-for="Lname" />
+
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input class="form-control date_picker" type="text" id="regular_date" asp-for="Date" placeholder="Select Date" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Monthly Rate</label>
+                                    <input type="number" asp-for="Salary" id="regular_salary" class="form-control input-data" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>PERA</label>
+                                    <input type="number" asp-for="PERA" class="form-control input-data" id="regular_pera" value="@Model.PERA.ToString("F2")" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Working Days</label>
+                                    <input type="number" asp-for="WorkingDays" class="form-control input-data" id="regular_working_days" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Absent Days</label>
+                                    <input type="number" class="form-control" id="regular_absent_date" name="regular_absent_date" placeholder="Choose Date" readonly />
+                                    <input type="hidden" asp-for="AbsentDays" id="regular_absent_date_list" />
+                                </div>
+                                <div class="form-group">
+                                    <table id="regular_date_list" class="table table-borderless">
+                                        @if (!string.IsNullOrEmpty(Model.AbsentDays))
+                                        {
+                                            if (Model.AbsentDays.Split(",").Length > 0)
+                                            {
+                                                for (int x = 0; x < Model.AbsentDays.Split(',').Length; x++)
+                                                {
+                                                    <tr>
+                                                        <td class="date_inside">@Model.AbsentDays.Split(',')[x]</td>
+                                                        <td>
+                                                            <i class="fas fa-times text-danger" style="cursor: pointer;" onclick="RemoveDateItemRegular($(this).parent().parent())"></i>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Minutes (Late/Undertime)</label>
+                                    <input type="number" asp-for="MinutesLate" id="regular_minutes_late" class="form-control input-data" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Deduction(Late/Undertime/Absent)</label>
+                                    <input type="number" asp-for="Deduction" class="form-control" id="regular_deduction" value="@Model.Deduction.ToString("F2")" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Net Amount</label>
+                                    <input type="number" asp-for="NetAmount" class="form-control" id="regular_net_amount" value="@Model.NetAmount.ToString("F2")" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="other_deductions">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label>Tax</label>
+                                                    <div class="input-group add-on">
+                                                        <input type="number" asp-for="ProfessionalTax" class="form-control input-data" id="regular_tax" value="@Model.ProfessionalTax.ToString("F2")" required readonly />
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-success" style="float:left;" id="edit_tax" value="tax" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                <i id="tax_icon" class="fas fa-pencil-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <label>
+                                                        CFI
+                                                    </label>
+                                                </th>
+                                                <th>
+                                                    <label>
+                                                        No. Payment
+                                                    </label>
+                                                </th>
+                                                <th>
+                                                    <label>
+                                                        No. Paid
+                                                    </label>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input type="number" asp-for="CFI.Item" class="form-control input-data" id="regular_cfi" value="@Model.CFI.Item.ToString("F2")" readonly required />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input type="number" asp-for="CFI.NoPayment" class="form-control" id="regular_cfi_payment" readonly required />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <div class="input-group add-on">
+                                                            <input type="number" asp-for="CFI.NoPaid" class="form-control" id="regular_cfi_paid" readonly required />
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-success" id="edit_cfi" type="button" value="cfi" onclick="UpdatePaymentsRegular($(this));">
+                                                                    <i id="cfi_icon" class="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--HIDDEN-->
+                            <div id="remittance">
+                                <hr />
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>GSIS - Premium</label>
+                                            <input type="number" asp-for="GSIS_Premium" class="form-control input-data" id="regular_gsis_premium" value="@Model.GSIS_Premium.ToString("F2")" required readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - Consoloan</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_Consoloan.Item" class="form-control input-data" id="regular_gsis_consoloan" value="@Model.GSIS_Consoloan.Item.ToString("F2")" readonly required />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_Consoloan.NoPayment" class="form-control" id="regular_gsis_consoloan_payment" readonly required />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_Consoloan.NoPaid" class="form-control" id="regular_gsis_consoloan_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_consoloan" type="button" value="gsis_consoloan">
+                                                                        <i id="gsis_consoloan_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - Policy Loan</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_PolicyLoan.Item" class="form-control input-data" id="regular_gsis_policyloan" value="@Model.GSIS_PolicyLoan.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_PolicyLoan.NoPayment" class="form-control" id="regular_gsis_policyloan_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_PolicyLoan.NoPaid" class="form-control" id="regular_gsis_policyloan_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_policyloan" value="gsis_policyloan" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_policyloan_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - EML</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_EML.Item" class="form-control input-data" id="regular_gsis_eml" value="@Model.GSIS_EML.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_EML.NoPayment" class="form-control" id="regular_gsis_eml_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_EML.NoPaid" class="form-control" id="regular_gsis_eml_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_eml" value="gsis_eml" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_eml_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - UOLI</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_UOLI.Item" class="form-control input-data" id="regular_gsis_uoli" value="@Model.GSIS_UOLI.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_UOLI.NoPayment" class="form-control" id="regular_gsis_uoli_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_UOLI.NoPaid" class="form-control" id="regular_gsis_uoli_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_uoli" value="gsis_uoli" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_uoli_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - EDU ASST</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_EDU.Item" class="form-control input-data" id="regular_gsis_edu" value="@Model.GSIS_EDU.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_EDU.NoPayment" class="form-control" id="regular_gsis_edu_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_EDU.NoPaid" class="form-control" id="regular_gsis_edu_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_edu" value="gsis_edu" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_edu_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - GFAL</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_GFAL.Item" class="form-control input-data" id="regular_gsis_gfal" value="@Model.GSIS_GFAL.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_GFAL.NoPayment" class="form-control" id="regular_gsis_gfal_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_GFAL.NoPaid" class="form-control" id="regular_gsis_gfal_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_gfal" value="gsis_gfal" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_gfal_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - COMP</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_COMP.Item" class="form-control input-data" id="regular_gsis_comp" value="@Model.GSIS_COMP.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_COMP.NoPayment" class="form-control" id="regular_gsis_comp_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_COMP.NoPaid" class="form-control" id="regular_gsis_comp_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_comp" value="gsis_comp" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_comp_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>GSIS - HELP</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_Help.Item" class="form-control input-data" id="regular_gsis_help" value="@Model.GSIS_Help.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_Help.NoPayment" class="form-control" id="regular_gsis_help_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_Help.NoPaid" class="form-control" id="regular_gsis_help_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_gsis_help" value="gsis_help" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_help_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>REL</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_Rel.Item" class="form-control input-data" id="regular_gsis_rel" value="@Model.GSIS_Rel.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="GSIS_Rel.NoPayment" class="form-control" id="regular_gsis_rel_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="GSIS_Rel.NoPaid" class="form-control" id="regular_gsis_rel_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_rel" value="gsis_rel" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="gsis_rel_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>Pagibig - Premium</label>
+                                            <input type="number" asp-for="PagibigPremium" class="form-control input-data" id="regular_pagibig_premium" value="@Model.PagibigPremium.ToString("F2")" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>Pagibig - Loan</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="PagibigLoan.Item" class="form-control input-data" id="regular_pagibig_loan" value="@Model.PagibigLoan.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="PagibigLoan.NoPayment" class="form-control" id="regular_pagibig_loan_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="PagibigLoan.NoPaid" class="form-control" id="regular_pagibig_loan_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_pagibig_loan" value="pagibig_loan" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="pagibig_loan_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>Pagibig - MP2</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="PagibigMP2.Item" class="form-control input-data" id="regular_pagibig_mp2" value="@Model.PagibigMP2.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="PagibigMP2.NoPayment" class="form-control" id="regular_pagibig_mp2_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="PagibigMP2.NoPaid" class="form-control" id="regular_pagibig_mp2_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_pagibig_mp2" value="pagibig_mp2" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="pagibig_mp2_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                        <label>Pagibig Calamity</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                            <tr>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input type="number" asp-for="PagibigCalimity.Item" class="form-control input-data" id="regular_pagibig_calamity" value="@Model.PagibigCalimity.Item.ToString("F2")" required readonly />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <input type="number" asp-for="PagibigCalimity.NoPayment" class="form-control" id="regular_pagibig_calamity_payment" required readonly />
+                                                    </div>
+                                                </td>
+                                                <td class="td-0">
+                                                    <div class="form-group">
+                                                        <div class="input-group add-on">
+                                                            <input type="number" asp-for="PagibigCalimity.NoPaid" class="form-control" id="regular_pagibig_calamity_paid" required readonly />
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-success" id="edit_pagibig_calamity" value="pagibig_calamity" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                    <i id="pagibig_calamity_icon" class="fas fa-pencil-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>Philhealth</label>
+                                            <input type="number" asp-for="Phic" class="form-control input-data" id="regular_philhealth" value="@Model.Phic.ToString("F2")" required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>SIMC</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="SIMC.Item" class="form-control input-data" id="regular_simc" value="@Model.SIMC.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="SIMC.NoPayment" class="form-control" id="regular_simc_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="SIMC.NoPaid" class="form-control" id="regular_simc_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_simc" value="simc" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="simc_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>HWMPC</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="HWMPC.Item" class="form-control input-data" id="regular_coop" value="@Model.HWMPC.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="HWMPC.NoPayment" class="form-control" id="regular_coop_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="HWMPC.NoPaid" class="form-control" id="regular_coop_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_coop" value="coop" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="coop_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>DBP</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="DBP.Item" class="form-control input-data" id="regular_dbp" value="@Model.DBP.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="DBP.NoPayment" class="form-control" id="regular_dbp_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="DBP.NoPaid" class="form-control" id="regular_dbp_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_dbp" value="dbp" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="dbp_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>Disallowances</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Payment</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>No. Paid</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="Disallowances.Item" class="form-control input-data" id="regular_disallowance" value="@Model.Disallowances.Item.ToString("F2")" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <input type="number" asp-for="Disallowances.NoPayment" class="form-control" id="regular_disallowance_payment" required readonly />
+                                                        </div>
+                                                    </td>
+                                                    <td class="td-0">
+                                                        <div class="form-group">
+                                                            <div class="input-group add-on">
+                                                                <input type="number" asp-for="Disallowances.NoPaid" class="form-control" id="regular_disallowance_paid" required readonly />
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-success" id="edit_disallowance" value="disallowance" type="button" onclick="UpdatePaymentsRegular($(this));">
+                                                                        <i id="disallowance_icon" class="fas fa-pencil-alt"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Total Deductions</label>
+                                    <input type="number" asp-for="TotalDeductions" class="form-control input-data" id="regular_total_deductions" value="@Model.TotalDeductions.ToString("F2")" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label>Net Pay</label>
+                                    <input type="number" asp-for="NetPay" class="form-control input-data" id="regular_total_amount" value="@Model.NetPay.ToString("F2")" required readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (ViewBag.Errors != null)
+                        {
+                            <div class="row" style="margin-top: 20px;">
+                                <div class="col-sm-12 center" style="align-content:center">
+                                    <span class="text-danger text-sm">Please Input requred fields.</span>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                                <button type="button" class="btn btn-primary form-control" id="regular_save" data-save="tab" value="Save">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="regular-payroll-list" role="tabpanel" aria-labelledby="payroll-list-label">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#regular_salary").popover({
+            container: 'body',
+            title: 'Edit Salary',
+            html: true,
+            placement: 'top',
+            sanitize: false,
+            content: function () {
+                return $("#edit_salary_popover").html();
+            }
+        });
+
+        $('#regular_absent_date').datepicker({
+            format: "mm/dd/yyyy",
+            multidate: true
+        }).on('changeDate', function (e) {
+            AppendDateRegular(e.format());
+            $('#regular_absent_date').val('');
+        }).on('hide', function (e) {
+            $(this).datepicker('clearDates');
+        });
+
+        $('.date_picker').on('changeDate', function () {
+            $(this).datepicker('hide');
+        });
+        $('.date_picker').datepicker({
+            format: "MM yyyy",
+            startView: "months",
+            minViewMode: "months"
+        });
+
+        $('#regular_create_payroll').find('.input-data').on('change', function () {
+            if ($(this).attr('id') !== 'regular_minutes_late' && $(this).attr('id') !== 'regular_working_days') {
+                $(this).val(roundOff($(this).val()));
+            }
+        })
+
+        $('#regular_create_payroll').find('.input-data').keyup(function () {
+            ComputeReDeductions();
+        });
+
+        $('#regular_date').on('change', function () {
+            if ($('#regular_date').val() !== '') {
+                var userid = $('#regular_create_payroll').find('#userid').val();
+                var date = $('#regular_date').val();
+                $.when(GetMinsLateAbsences(userid, date, '', 'regular')).done(function (output) {
+                    var mins = output.split(' ')[0];
+                    var absences = output.split(' ')[1];
+                    var working_days = output.split(' ')[2];
+                    console.log('mins: ' + mins);
+                    console.log('abs: ' + absences);
+                    console.log('wd: ' + working_days);
+
+                    $('#regular_date_list').empty();
+
+                    for (x = 0; x < absences.split(',').length; x++) {
+                        AppendDateRegular(absences.split(',')[x], x);
+                    }
+
+                    $('#regular_minutes_late').val(mins);
+                    $('#regular_working_days').val(working_days);
+
+                    ComputeReDeductions();
+                });
+            }
+        })
+
+        $('#edit-payroll-tab').on('click', function (e) {
+            $(window).scrollTop($('#regular_payroll_container').offset().top);
+        });
+    });
+</script>

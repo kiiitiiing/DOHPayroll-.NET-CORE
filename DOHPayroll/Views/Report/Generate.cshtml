@@ -1,0 +1,409 @@
+﻿
+@{
+    ViewData["Title"] = "Generate";
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="row">
+            <!-- REGULAR -->
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">REGULAR</span>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <!-- REGULAR PAYROLL -->
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">Payroll</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" style="padding: 2px !important;">
+                        <form asp-controller="Payroll" asp-action="GenerateRegularPayroll" method="post">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Date</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <input class="form-control date_picker readonly" type="text" id="re_payroll_date" name="date" placeholder="Select Date" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Salary Charge</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <select class="form-control" asp-items="ViewBag.RegularSalaryCharge" name="salary_charge">
+                                            <option value="ALL">ALL</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" formtarget="_blank" class="btn btn-sm btn-primary" style="width: 100%;">
+                                            GENERATE
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <!-- REGULAR GENERAL PAYROLL -->
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">General Payroll</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" style="padding: 2px !important;">
+                        <form asp-controller="Payroll" asp-action="GenerateGeneralPayroll" method="post">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Date</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <input class="form-control date_picker readonly" type="text" id="re_gen_payroll_date" name="date" placeholder="Select Date" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Division</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <select class="form-control" id="regular_division" name="division" asp-items="ViewBag.Divisions">
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" formtarget="_blank" class="btn btn-sm btn-primary" style="width: 100%;">
+                                            GENERATE
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <!-- REGULAR REMITTANCES -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">Remittances</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" style="padding: 2px !important;">
+                        <form asp-controller="Remittance" asp-action="RegularRemittance" method="post">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width:30%">
+                                        <label>Date</label>
+                                    </td>
+                                    <td style="width:70%">
+                                        <input class="form-control date_picker readonly" type="text" id="regular_remittance_date" name="date" placeholder="Select Date" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%">
+                                        <label>Type</label>
+                                    </td>
+                                    <td style="width:70%">
+                                        <select class="form-control" id="regular_remittance_type" name="type">
+                                            <option value="">Select Type</option>
+                                            <option value="pagibig">Pag-Ibig</option>
+                                            <option value="phic">PhilHealth</option>
+                                            <option value="coop">HWMPC</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" formtarget="_blank" class="btn btn-sm btn-primary" style="width: 100%;">
+                                            GENERATE
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <!-- REGULAR Others -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">Other Payrolls</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" style="padding: 2px !important;">
+                        <form asp-controller="OtherPayroll" asp-action="GetOtherRemittance" method="post">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width:30%">
+                                        <label>Date</label>
+                                    </td>
+                                    <td style="width:70%">
+                                        <input class="form-control date_picker readonly" type="text" id="re_remittance_date" name="date" placeholder="Select Date" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%">
+                                        <label>Type</label>
+                                    </td>
+                                    <td style="width:70%">
+                                        <select class="form-control" id="re_other_type" name="type">
+                                            <option value="">Select Type</option>
+                                            <option value="hazard">Hazard</option>
+                                            <option value="cellphone">Cellphone</option>
+                                            <option value="rata">Rata</option>
+                                            <option value="longevity">Longevity</option>
+                                            <option value="subsistence">Subsistence</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" formtarget="_blank" class="btn btn-sm btn-primary" style="width: 100%;">
+                                            GENERATE
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <!-- JOB ORDER -->
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">JOB ORDER</span>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <!-- JOB ORDER PAYROLL -->
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">Payroll</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" style="padding: 2px !important;">
+                        <form asp-controller="Payroll" asp-action="GenerateJobOrderPayroll" method="post">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Date</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <input class="form-control date_picker readonly" type="text" id="jo_payroll_date" name="date" placeholder="Select Date" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Option</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <select class="form-control" id="jo_option_payroll" name="range" required>
+                                            <option value="">Select Option</option>
+                                            <option value="1">First Half of Month</option>
+                                            <option value="2">Second Half of Month</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Disbursement</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <select class="form-control" id="jo_payroll_disbursement" name="disbursement" required>
+                                            <option value="ATM">ATM</option>
+                                            <option value="CASH_CARD">Cashcard</option>
+                                            <option value="NO_CARD">W/O LBP Cards</option>
+                                            <option value="UNDER_VTF">Under VTF</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 30%">
+                                        <label>Salary Charge</label>
+                                    </td>
+                                    <td style="width: 70%">
+                                        <select class="form-control" name="salary_charge" asp-items="ViewBag.JobOrderSalaryCharge">
+                                            <option value="ALL">ALL</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" formtarget="_blank" class="btn btn-sm btn-success" style="width: 100%;">
+                                            GENERATE
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <!-- JOB ORDER REMITTANCE -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="text-bold">Remittances</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" style="padding: 2px !important;">
+                        <form asp-controller="Remittance" asp-action="JoRemittance" method="post">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td style="width:30%">
+                                        <label>Date</label>
+                                    </td>
+                                    <td style="width:70%">
+                                        <input class="form-control date_picker readonly" type="text" id="jo_remittance_date" name="date" placeholder="Select Date" required />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%">
+                                        <label>Type</label>
+                                    </td>
+                                    <td style="width:70%">
+                                        <select class="form-control" id="jo_remittance_type" name="type" required>
+                                            <option value="">Select Type</option>
+                                            <option value="pagibig">Pag-Ibig</option>
+                                            <option value="phic">PhilHealth</option>
+                                            <option value="coop">HWMPC</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" formtarget="_blank" class="btn btn-sm btn-success" style="width: 100%;">
+                                            GENERATE
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-primary collapsed-card" id="cprata_card">
+                    <div class="card-header">
+                        <div class="card-tools fa-pull-right">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <label style="white-space: nowrap;">
+                            Communication Allowance/<br />
+                            RATA
+                        </label>
+
+                        <div class="row">
+                            <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10">
+                                <div class="form-group">
+                                    <select class="form-control select2" id="eployee_name_userid"></select>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2">
+                                <div class="form-group">
+                                    <button class="btn-sm btn bg-gradient-success" id="eployee_name_userid" onclick="AddEmployee($(this).parent().parent().parent().find('#eployee_name_userid').val());">
+                                        <i class="fas fa-user-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" id="employee_cprata">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        LoadCPRata();
+
+        console.log($('#eployee_name_userid'));
+
+
+        $('.select2').select2({
+            ajax: {
+                url: '@Url.Action("GetEmployeesJson","Json")',
+                dataType: 'json',
+                delay: 500,
+                data: function (params) {
+                    return {
+                        name: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.items
+                    };
+                },
+                placeholder: "search patient"
+            }
+        });
+
+        $('.date_picker').datepicker({
+            format: "MM yyyy",
+            startView: "months",
+            minViewMode: "months"
+        });
+
+        $('.date_picker').on('changeDate', function () {
+            $(this).datepicker('hide');
+        });
+
+        $('.date_picker_remittance_re').datepicker({
+            multidate: true,
+            multidateSeparator: "-",
+            autoClose: true,
+            viewMode: "months",
+            format: "mm/yyyy",
+            minViewMode: "months"
+        }).on("changeDate", function (event) {
+            var dates = event.dates, elem = $('.date_picker_remittance_re');
+            if (elem.data("selecteddates") == dates.join(",")) return; //To prevernt recursive call, that lead to lead the maximum stack in the browser.
+            if (dates.length > 2) dates = dates.splice(dates.length - 1);
+            dates.sort(function (a, b) { return new Date(a).getTime() - new Date(b).getTime() });
+            elem.data("selecteddates", dates.join(",")).datepicker('setDates', dates);
+        });
+
+        $('.date_picker_remittance_jo').datepicker({
+            multidate: true,
+            multidateSeparator: "-",
+            autoClose: true,
+            viewMode: "months",
+            format: "mm/yyyy",
+            minViewMode: "months"
+        }).on("changeDate", function (event) {
+            var dates = event.dates, elem = $('.date_picker_remittance_jo');
+            if (elem.data("selecteddates") == dates.join(",")) return; //To prevernt recursive call, that lead to lead the maximum stack in the browser.
+            if (dates.length > 2) dates = dates.splice(dates.length - 1);
+            dates.sort(function (a, b) { return new Date(a).getTime() - new Date(b).getTime() });
+            elem.data("selecteddates", dates.join(",")).datepicker('setDates', dates);
+        });
+    });
+</script>

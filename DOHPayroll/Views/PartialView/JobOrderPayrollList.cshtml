@@ -1,0 +1,76 @@
+﻿@model PaginatedList<JoPayrollModel>
+
+<div class="row">
+    @if (Model.Count() > 0)
+    {
+        @foreach (var payroll in Model)
+        {
+            var month = payroll.StartDate.ToString("MMMM");
+            var startDate = payroll.StartDate.Day;
+            var endDate = payroll.EndDate.Day;
+            var year = payroll.StartDate.ToString("yyyy");
+            var date = month + " " + startDate + "-" + endDate + ", " + year;
+            <div class="col-md-4">
+                <div class="small-box bg-gradient-white" style="padding-bottom: 5px !important;">
+                    <div class="inner">
+                        <h5>@payroll.ID</h5>
+
+                        <p>@date</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="form-inline" style="margin-left: 5px !important;">
+                        <button class="btn btn-sm btn-danger btn-margin-right"
+                                value="@payroll.PayrollId"
+                                data-userid="@payroll.ID"
+                                onclick="DeleteDbRow($(this).val(), 'payroll', $(this).data('userid'));">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        @if (DateTime.Now >= payroll.StartDate && DateTime.Now <= payroll.EndDate)
+                        {
+                            <button class="btn btn-sm btn-primary btn-margin-right" value="@payroll.PayrollId" data-params="@payroll.ID-@payroll.Fname-@payroll.Mname-@payroll.Lname-@payroll.Salary" onclick="UpdateJoPayroll($(this));">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        }
+                        <a class="btn btn-sm btn-success btn-margin-right" target="_blank" asp-action="JoPayslip" asp-controller="Payslip"
+                           asp-route-userid="@payroll.ID"
+                           asp-route-fname="@payroll.Fname"
+                           asp-route-mname="@payroll.Mname"
+                           asp-route-lname="@payroll.Lname"
+                           asp-route-salary="@payroll.Salary"
+                           asp-route-payrollId="@payroll.PayrollId">
+                            <i class="fas fa-file-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning col-md-12">
+            <span class="text-lg">
+                <i class="fa fa-exclamation-triangle"></i>
+                &nbsp;No data found!
+            </span>
+        </div>
+    }
+</div>
+
+<div class="page-list-footer">
+    @await Html.PartialAsync("~/Views/Shared/_PageListsPartial.cshtml", new PageListModel
+{
+    Action = Model._action,
+    HasNextPage = Model.HasNextPage,
+    HasPreviousPage = Model.HasPreviousPage,
+    PageIndex = Model._pageIndex,
+    TotalPages = Model._totalPages,
+    Container = "payroll-list",
+    Parameters = new Dictionary<string, string>
+    {
+        { "userid", ViewBag.UserID},
+        { "page", Model._pageIndex.ToString() }
+    }
+})
+</div>

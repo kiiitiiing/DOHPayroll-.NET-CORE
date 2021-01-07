@@ -1,0 +1,107 @@
+﻿@model LoginModel
+
+
+@{
+    ViewData["Title"] = "DOHRO7 Referral System | Log in";
+    var usernameValid = ViewBag.Username == "invalid" ? "is-invalid" : "";
+    var passwordValid = ViewBag.Password == "invalid" ? "is-invalid" : "";
+}
+
+
+<div class="login-box">
+    <center>
+        <img src="~/assets/dist/img/DOHLOGO.png" style="width: 25%" /><br>
+        <label>DOH PAYROLL</label>
+    </center>
+    <!-- /.login-logo -->
+    <div class="card" style="font-size: 14px;">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">Sign in to start your session @ViewBag.Color</p>
+
+            <form asp-action="Login" method="post" id="login-form">
+                <div class="input-group mb-3">
+                    <input class="form-control @usernameValid" asp-for="Username" id="username" placeholder="Login ID">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fa fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <span class="text-danger" asp-validation-for="Username"></span>
+                <div class="input-group mb-3">
+                    <input class="form-control @passwordValid" asp-for="Password" id="password" type="password" placeholder="Password">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-eye-slash" id="password-toggle"></span>
+                        </div>
+                    </div>
+                </div>
+                <span class="text-danger" asp-validation-for="Password"></span>
+                <div>
+                    <div class="fa-pull-left">
+                        <strong>
+                        </strong>
+                    </div>
+                    <!-- /.col -->
+                    <div class="fa-pull-right">
+                        <button id="login" class="btn btn-primary">
+                            <i class="fa fa-lock"></i>&nbsp;
+                            Sign In
+                        </button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+
+
+<script>
+
+    if ('@ViewBag.Result' != 'False') {
+        $('#notif-modal').modal('show');
+    }
+    var loginBtn = $('#login');
+    $(function () {
+        loginBtn.on('click', function () {
+            if ($('#password').val() != '') {
+                loginBtn.html('<i class="fa fa-spinner fa-spin"></i> Validating');
+                loginBtn.submit();
+            }
+        });
+    });
+
+    $('#username').on('change', function () {
+        $('#username').removeClass('is-invalid');
+    });
+    $('#password').on('change', function () {
+        $('#password').removeClass('is-invalid');
+    })
+    $('#password-toggle').mousedown(function () {
+        $('#password-toggle').removeClass('fa-eye-slash');
+        $('#password-toggle').addClass('fa-eye');
+        PasswordToggle()
+    });
+    $('#password-toggle').mouseleave(function () {
+        $('#password-toggle').removeClass('fa-eye');
+        $('#password-toggle').addClass('fa-eye-slash');
+        PasswordToggle()
+    });
+    $('#password-toggle').mouseup(function () {
+        $('#password-toggle').removeClass('fa-eye');
+        $('#password-toggle').addClass('fa-eye-slash');
+        PasswordToggle()
+    });
+    function PasswordToggle() {
+        if ($('#password-toggle').hasClass('fa-eye-slash')) {
+            $('#password').removeAttr("type");
+            $('#password').attr("type", "password");
+        }
+        else {
+            $('#password').removeAttr("type");
+            $('#password').attr("type", "text");
+        }
+    }
+</script>

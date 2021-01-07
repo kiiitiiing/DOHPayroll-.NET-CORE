@@ -1,0 +1,146 @@
+﻿@model HazardModel
+
+
+<div class="col-12 col-sm-12">
+    <div class="card card-warning card-tabs">
+        <div class="card-header p-0 pt-1 form-inline">
+            <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                <li class="pt-2 px-3"><h3 class="card-title">Hazard for <span class="text-bold">@Model.Fullname.ToUpper()</span></h3></li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="edit-payroll-tab" data-toggle="pill" href="#edit-regular-hazard" role="tab" aria-controls="edit-payroll" aria-selected="true">
+                        Edit
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="payroll-list-tab" data-toggle="pill" href="#regular-hazard-list" role="tab" aria-controls="payroll-list-label" aria-selected="false">
+                        List
+                    </a>
+                </li>
+            </ul>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool text-danger" data-card-widget="remove" style="position: absolute; right: 20px !important; top: 20px !important;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-two-tabContent">
+                <div class="tab-pane fade show active" id="edit-regular-hazard" role="tabpanel" aria-labelledby="edit-hazard">
+                    <form asp-action="GenerateHazard" asp-controller="PartialView" method="post" id="regular_hazard_form">
+                        <input type="hidden" id="hazard_id" asp-for="HazardID" />
+                        <input type="hidden" id="userid" asp-for="ID" />
+                        <input type="hidden" id="fname" asp-for="Fname" />
+                        <input type="hidden" id="mname" asp-for="Mname" />
+                        <input type="hidden" id="lname" asp-for="Lname" />
+                        <div class="">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Date</label>
+                                        <input class="form-control date_picker" type="text" id="hazard_date" asp-for="Date" placeholder="Select Date" readonly />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>HAZARD PAY</label>
+                                        <input type="number" asp-for="HazardPay" id="hazard_pay" class="form-control input-data" value="@Model.HazardPay.ToString("f2")" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>HWMPC</label>
+                                        <input type="number" asp-for="HWMPCLoan" id="hazard_hwmpc" class="form-control input-data" value="@Model.HWMPCLoan.ToString("F2")" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Globe Billing</label>
+                                        <input type="number" asp-for="GlobeBill" id="hazard_globe" class="form-control input-data" value="@Model.GlobeBill.ToString("F2")" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Sun Billing</label>
+                                        <input type="number" asp-for="SunBill" id="hazard_sun" class="form-control input-data" value="@Model.SunBill.ToString("F2")" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>MORTUARY</label>
+                                        <input type="number" asp-for="Mortuary" id="hazard_mortuary" class="form-control input-data" value="@Model.Mortuary.ToString("F2")" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label># of Days (w/ O.O)</label>
+                                        <input type="number" asp-for="DaysWithOO" id="hazard_oo" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label># of Days (w/ Leave)</label>
+                                        <input type="number" asp-for="DaysWithLeave" id="hazard_leave" class="form-control" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label>Net Amount</label>
+                                        <input type="number" asp-for="NetAmount" id="hazard_net" class="form-control" value="@Model.NetAmount.ToString("F2")" readonly required />
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (ViewBag.Errors != null)
+                            {
+                                <div class="row" style="margin-top: 20px;">
+                                    <div class="col-sm-12 center" style="align-content:center">
+                                        <span class="text-danger text-sm">Please Input requred fields.</span>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="row">
+                                <div class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                                    <button type="button" class="btn btn-primary btn_save" id="hazard_save" data-save="tab">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="regular-hazard-list" role="tabpanel" aria-labelledby="payroll-list-label">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+
+        $('.date_picker').datepicker({
+            format: "MM yyyy",
+            startView: "months",
+            minViewMode: "months"
+        }).on('changeDate', function () {
+            $(this).datepicker('hide');
+        });
+
+        $('#regular_hazard_form').find('.input-data').keyup(function () {
+            ComputeHazard();
+        });
+
+        $('#regular_hazard_form').find('.input-data').change(function () {
+            $(this).val(roundOff($(this).val()));
+        });
+    })
+</script>

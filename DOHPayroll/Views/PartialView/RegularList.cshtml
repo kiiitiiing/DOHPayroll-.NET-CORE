@@ -1,0 +1,131 @@
+﻿@model PaginatedList<Employee>
+
+@if (Model.Count() > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    USER ID
+                </th>
+                <th>
+                    FULL NAME
+                </th>
+                <th>
+                    DESIGNATION
+                </th>
+                <th>
+                    SALARY
+                </th>
+                <th>
+                    &nbsp;
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var regular in Model)
+            {
+                var trbg = string.IsNullOrEmpty(regular.Salary) ? "no-salary" : "";
+                <tr class="@trbg" id="@regular.ID">
+                    <td>
+                        @regular.ID
+                    </td>
+                    <td>
+                        @regular.Fullname.ToUpper()
+                    </td>
+                    <td>
+                        @regular.Designation
+                    </td>
+                    <td id="salary_@regular.ID">
+                        @regular.Salary
+                    </td>
+                    <td class="hidden">
+                        @regular.Fname
+                    </td>
+                    <td class="hidden">
+                        @regular.Mname
+                    </td>
+                    <td class="hidden">
+                        @regular.Lname
+                    </td>
+                    <td>
+                        <div class="fa-pull-right">
+                            <button type="button"
+                                    class="btn btn-sm bg-gradient-success open_payroll"
+                                    title="PAYROLL"
+                                    value="@regular.ID"
+                                    onclick="LoadRegularPayrollandList($(this).parent().parent().parent());">
+                                <i class="fas fa-file-invoice"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm bg-gradient-success open_payroll"
+                                    title="HAZARD"
+                                    value="@regular.ID"
+                                    onclick="LoadHazardAndList($(this).parent().parent().parent());">
+                                <i class="fas fa-radiation"></i>
+                            </button>
+                            @if (regular.CPRATA)
+                            {
+                                <button type="button"
+                                        class="btn btn-sm bg-gradient-success open_payroll"
+                                        title="RATA"
+                                        value="@regular.ID"
+                                        onclick="LoadRataAndList($(this).parent().parent().parent());">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-sm bg-gradient-success open_payroll"
+                                        title="CELLPHONE"
+                                        value="@regular.ID"
+                                        onclick="LoadCellphoneAndList($(this).parent().parent().parent());">
+                                    <i class="fas fa-phone-square-alt"></i>
+                                </button>
+                            }
+                            <button type="button"
+                                    class="btn btn-sm bg-gradient-success open_payroll"
+                                    title="LONGEVITY"
+                                    value="@regular.ID"
+                                    onclick="LoadLongevityAndList($(this).parent().parent().parent());">
+                                <i class="fas fa-hand-point-up"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm bg-gradient-success open_payroll"
+                                    title="SUBSISTENCE"
+                                    value="@regular.ID"
+                                    onclick="LoadSubsistenceAndList($(this).parent().parent().parent());">
+                                <i class="fas fa-hands"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span class="text-lg">
+            <i class="fa fa-exclamation-triangle"></i>
+            &nbsp;No data found!
+        </span>
+    </div>
+}
+
+<div class="page-list-footer">
+    @await Html.PartialAsync("~/Views/Shared/_PageListsPartial.cshtml", new PageListModel
+{
+    Action = Model._action,
+    HasNextPage = Model.HasNextPage,
+    HasPreviousPage = Model.HasPreviousPage,
+    PageIndex = Model._pageIndex,
+    TotalPages = Model._totalPages,
+    Container = "regular_container",
+    Parameters = new Dictionary<string, string>
+    {
+        { "disbursementType", ViewBag.Type },
+        { "search", ViewBag.CurrentSearch},
+        { "page", Model._pageIndex.ToString() }
+    }
+})
+</div>

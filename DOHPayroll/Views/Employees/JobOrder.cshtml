@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = ViewBag.Action;
+}
+
+
+<div class="row">
+    <div class="card card-outline card-warning col-md-12">
+        <div class="card-header">
+            <div class="card-title">
+                <h5>@ViewBag.Action</h5>
+            </div>
+            <div class="form-inline ml-3 fa-pull-right">
+                <div class="input-group input-group-sm">
+                    <input class="form-control form-control-navbar" name="search" placeholder="Search" value="@ViewBag.Search" id="search_value" type="text" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-default jo_search" type="button" title="Search" onclick="LoadJobOrderList('@ViewBag.Type', $('#search_value').val());">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-default jo_payroll_modal" data-toggle="modal" data-target="#generate_jo_payroll" data-backdrop="static" type="button" title="Generate Payroll">
+                            <i class="fas fa-file-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body" id="job_order_container">
+        </div>
+    </div>
+</div>
+
+<div class="row" id="job_order_payroll_container">
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        LoadJobOrderList('@ViewBag.Type','');
+
+        $('#search_value').on('keypress', function (e) {
+            if (e.which == 13) {
+                LoadJobOrderList('@ViewBag.Type', $('#search_value').val());
+            }
+        })
+    });
+</script>

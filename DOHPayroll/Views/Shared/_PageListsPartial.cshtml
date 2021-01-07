@@ -1,0 +1,172 @@
+﻿@model PageListModel
+
+<style>
+    .page_no a {
+        font-size: 12px !important;
+    }
+</style>
+
+@if (Model.TotalPages > 1)
+{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var between = false;
+    var stringQuery = Model.Parameters;
+    var index = Model.Parameters;
+    <ul class="pagination pagination-sm m-0 float-right" style="align-content:center; white-space:normal !important;">
+        <li class="page_no">
+            @{
+                Model.Parameters["page"] = (Model.PageIndex - 1).ToString();
+            }
+            <a asp-action="@Model.Action"
+               asp-all-route-data="Model.Parameters"
+               data-container="@Model.Container"
+               class="btn btn-default @prevDisabled page-button">
+                «
+            </a>
+        </li>
+        @for (int x = 1; x <= Model.TotalPages; x++)
+        {
+            index["page"] = x.ToString();
+            var activeClass = x == Model.PageIndex ? "btn-primary" : "btn-default";
+            if (Model.TotalPages > 10)
+            {
+                if (Model.PageIndex < 8)
+                {
+                    if (x < 9)
+                    {
+                        <li class="page_no">
+                            <a asp-action="@Model.Action"
+                               asp-all-route-data="index"
+                               data-container="@Model.Container"
+                               class="btn @activeClass page-button"
+                               onclick="return false;">
+                                @x
+                            </a>
+                        </li>
+                    }
+                    else if (x == 9 && !between)
+                    {
+                        between = !between;
+                        <li class="page_no">
+                            <a class="btn btn-default link-muted" style="cursor:not-allowed;">
+                                ...
+                            </a>
+                        </li>
+                    }
+                    else if (x > (Model.TotalPages - 2))
+                    {
+                        <li class="page_no">
+                            <a asp-action="@Model.Action"
+                               asp-all-route-data="index"
+                               data-container="@Model.Container"
+                               class="btn @activeClass page-button">
+                                @x
+                            </a>
+                        </li>
+                    }
+                }
+                else if (Model.PageIndex >= (Model.TotalPages - 6))
+                {
+                    if (x < 3)
+                    {
+                        <li class="page_no">
+                            <a asp-action="@Model.Action"
+                               asp-all-route-data="index"
+                               data-container="@Model.Container"
+                               class="btn @activeClass page-button">
+                                @x
+                            </a>
+                        </li>
+                    }
+                    else if (x == 3 && !between)
+                    {
+                        between = !between;
+                        <li class="page_no">
+                            <a class="btn btn-default link-muted" style="cursor:not-allowed;">
+                                ...
+                            </a>
+                        </li>
+                    }
+                    else if (x > (Model.TotalPages - 9))
+                    {
+                        <li class="page_no">
+                            <a asp-action="@Model.Action"
+                               asp-all-route-data="index"
+                               data-container="@Model.Container"
+                               class="btn @activeClass page-button">
+                                @x
+                            </a>
+                        </li>
+                    }
+                }
+                else if (Model.PageIndex >= 8 && (Model.TotalPages - 4) >= Model.PageIndex)
+                {
+                    if (x < 3)
+                    {
+                        <li class="page_no">
+                            <a asp-action="@Model.Action"
+                               asp-all-route-data="index"
+                               data-container="@Model.Container"
+                               class="btn @activeClass page-button">
+                                @x
+                            </a>
+                        </li>
+                    }
+                    else if (x == 3 || x == (Model.TotalPages - 3))
+                    {
+                        <li class="page_no">
+                            <a class="btn btn-default link-muted" style="cursor:not-allowed;">
+                                ...
+                            </a>
+                        </li>
+                    }
+                    else if (x >= (Model.PageIndex - 3) && x <= (Model.PageIndex + 3))
+                    {
+                        <li class="page_no">
+                            <a asp-action="@Model.Action"
+                               asp-all-route-data="index"
+                               data-container="@Model.Container"
+                               class="btn @activeClass page-button">
+                                @x
+                            </a>
+                        </li>
+                    }
+                    else if (x >= (Model.TotalPages - 1))
+                    {
+                        <li class="page_no">
+                            <a asp-action="@Model.Action"
+                               asp-all-route-data="index"
+                               data-container="@Model.Container"
+                               class="btn @activeClass page-button">
+                                @x
+                            </a>
+                        </li>
+                    }
+                }
+            }
+            else
+            {
+                <li class="page_no">
+                    <a asp-action="@Model.Action"
+                       asp-all-route-data="index"
+                       data-container="@Model.Container"
+                       class="btn @activeClass page-button">
+                        @x
+                    </a>
+                </li>
+            }
+        }
+        <li class="page_no">
+            @{
+                Model.Parameters["page"] = (Model.PageIndex + 1).ToString();
+            }
+            <a asp-action="@Model.Action"
+               asp-all-route-data="Model.Parameters"
+               data-container="@Model.Container"
+               class="btn btn-default @nextDisabled page-button">
+                »
+            </a>
+        </li>
+    </ul>
+}

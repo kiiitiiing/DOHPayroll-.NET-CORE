@@ -1,0 +1,87 @@
+﻿@model PaginatedList<Employee>
+
+@if (Model.Count() > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    USER ID
+                </th>
+                <th>
+                    FULL NAME
+                </th>
+                <th>
+                    DESIGNATION
+                </th>
+                <th>
+                    SALARY
+                </th>
+                <th>
+                    &nbsp;
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var jo in Model)
+            {
+                var trbg = string.IsNullOrEmpty(jo.Salary) ? "no-salary" : "";
+                <tr class="@trbg" id="@jo.ID">
+                    <td>
+                        @jo.ID
+                    </td>
+                    <td>
+                        @jo.Fullname.ToUpper()
+                    </td>
+                    <td>
+                        @jo.Designation
+                    </td>
+                    <td id="salary_@jo.ID">
+                        @jo.Salary
+                    </td>
+                    <td class="hidden">
+                        @jo.Fname
+                    </td>
+                    <td class="hidden">
+                        @jo.Mname
+                    </td>
+                    <td class="hidden">
+                        @jo.Lname
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm bg-gradient-success open_payroll" value="@jo.ID" onclick="LoadJoPayrollandList($(this).parent().parent());">
+                            <i class="fa fa-file"></i>&nbsp;Payroll
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span class="text-lg">
+            <i class="fa fa-exclamation-triangle"></i>
+            &nbsp;No data found!
+        </span>
+    </div>
+}
+
+<div class="page-list-footer">
+    @await Html.PartialAsync("~/Views/Shared/_PageListsPartial.cshtml", new PageListModel
+{
+    Action = Model._action,
+    HasNextPage = Model.HasNextPage,
+    HasPreviousPage = Model.HasPreviousPage,
+    PageIndex = Model._pageIndex,
+    TotalPages = Model._totalPages,
+    Container = "job_order_container",
+    Parameters = new Dictionary<string, string>
+    {
+        { "disbursementType", ViewBag.Type },
+        { "search", ViewBag.CurrentSearch},
+        { "page", Model._pageIndex.ToString() }
+    }
+})
+</div>
