@@ -304,13 +304,15 @@ namespace DOHPayroll.Controllers
                             Bold = true,
                         },
                         new Column(
-                            (payslipModels.Sum(x=>x.SecondHalf.Hazard.HazardPay) +
-                            payslipModels.Sum(x=>x.FirstHalf.Subsistence.Laundry) +
-                            payslipModels.Sum(x=>x.FirstHalf.Subsistence.Subsistence) +
-                            payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PERA) +
-                            payslipModels.Sum(x=>x.SecondHalf.Rata.RA) +
-                            payslipModels.Sum(x=>x.SecondHalf.Rata.TA) +
-                            payslipModels.Sum(x=>x.Salary.CheckSalaryIfEmpty())).FixDigit())
+                            (
+                                payslipModels.Sum(x=>x.SecondHalf.Hazard.HazardPay) +
+                                payslipModels.Sum(x=>x.FirstHalf.Subsistence.Laundry) +
+                                payslipModels.Sum(x=>x.FirstHalf.Subsistence.Subsistence) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PERA) +
+                                payslipModels.Sum(x=>x.SecondHalf.Rata.RA) +
+                                payslipModels.Sum(x=>x.SecondHalf.Rata.TA) +
+                                payslipModels.Sum(x=>x.Salary.CheckSalaryIfEmpty())
+                            ).FixDigit())
                         {
                             FontSize = contentFontSize,
                             TextAlignment = Alignment.RIGHT
@@ -404,7 +406,7 @@ namespace DOHPayroll.Controllers
                             FontSize = contentFontSize,
                             TextAlignment = Alignment.RIGHT
                         },
-                        new Column(payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigCalimity.Item).FixDigit())
+                        new Column(payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigCalamity.Item).FixDigit())
                         {
                             FontSize = contentFontSize,
                             TextAlignment = Alignment.RIGHT
@@ -613,7 +615,29 @@ namespace DOHPayroll.Controllers
                             FontSize = contentFontSize,
                             TextAlignment = Alignment.RIGHT
                         },
-                        new Column("0.00")
+                        new Column(
+                                (
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.ProfessionalTax) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigPremium) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigMP2.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_Premium) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_PolicyLoan.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_GFAL.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_EDU.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_UOLI.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.SIMC.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.CFI.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.Phic) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigLoan.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigCalamity.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_Consoloan.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_COMP.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_Help.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_EML.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.DBP.Item) +
+                                    payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.HWMPC.Item)
+                                ).FixDigit()
+                            )
                         {
                             Bold = true,
                             PaddingTop = 3,
@@ -634,7 +658,38 @@ namespace DOHPayroll.Controllers
                             FontSize = contentFontSize,
                             TextAlignment = Alignment.RIGHT
                         },
-                        new Column("0.00")
+                        new Column(
+                            (((
+                                payslipModels.Sum(x=>x.SecondHalf.Hazard.HazardPay) +
+                                payslipModels.Sum(x=>x.FirstHalf.Subsistence.Laundry) +
+                                payslipModels.Sum(x=>x.FirstHalf.Subsistence.Subsistence) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PERA) +
+                                payslipModels.Sum(x=>x.SecondHalf.Rata.RA) +
+                                payslipModels.Sum(x=>x.SecondHalf.Rata.TA) +
+                                payslipModels.Sum(x=>x.Salary.CheckSalaryIfEmpty())
+                            ) -
+                            (
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.ProfessionalTax) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigPremium) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigMP2.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_Premium) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_PolicyLoan.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_GFAL.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_EDU.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_UOLI.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.SIMC.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.CFI.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.Phic) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigLoan.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.PagibigCalamity.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_Consoloan.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_COMP.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_Help.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.GSIS_EML.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.DBP.Item) +
+                                payslipModels.Sum(x=>x.FirstHalf.RegularPayroll.HWMPC.Item)
+                            ))).FixDigit()
+                            )
                         {
                             Bold = true,
                             FontSize = contentFontSize,
@@ -1155,7 +1210,7 @@ namespace DOHPayroll.Controllers
                             payroll.Phic.FormalDigit(), payroll.GSIS_Help.Item.FormalDigit(), payroll.GSIS_GFAL.Item.FormalDigit(),
                             payroll.GSIS_COMP.Item.FormalDigit(), payroll.PagibigMP2.Item.FormalDigit(),
                             payroll.DBP.Item.FormalDigit(), (payroll.NetPay / 2).FormalDigit(), DateTime.DaysInMonth(payroll.Year, payroll.Month),
-                            payroll.PagibigCalimity.Item.FormalDigit()
+                            payroll.PagibigCalamity.Item.FormalDigit()
                             );
                             ctr++;
                         }

@@ -33,7 +33,7 @@ namespace DOHPayroll.Databases
                 if (INSTANCE == null)
                 {
                     INSTANCE = new PayrollDatabase();
-                    INSTANCE.Initialize(0);
+                    INSTANCE.Initialize(1);
                 }
                 return INSTANCE;
             }
@@ -139,7 +139,7 @@ namespace DOHPayroll.Databases
                 payroll.CFI.Item + "','" + payroll.GSIS_Premium + "','" + payroll.GSIS_Consoloan.Item + "','" + payroll.GSIS_PolicyLoan.Item + "','" + payroll.GSIS_EML.Item + "'," +
                 "'" + payroll.GSIS_UOLI.Item + "','" + payroll.GSIS_EDU.Item + "', '" + payroll.GSIS_Help.Item + "', '" + payroll.GSIS_Rel.Item + "','" + payroll.PagibigPremium + "'," +
                 "'" + payroll.PagibigLoan.Item + "', '" + payroll.Disallowances.Item + "', '" + payroll.Phic + "', '" + payroll.SIMC.Item + "', '" + payroll.HWMPC.Item + "', '" + payroll.DBP.Item + "'," +
-                "'" + payroll.PagibigMP2.Item + "', '" + payroll.PagibigCalimity.Item + "', '" + payroll.GSIS_GFAL.Item + "', '" + payroll.GSIS_COMP.Item + "')" + (ctr == model.Count() ? "" : ", ");
+                "'" + payroll.PagibigMP2.Item + "', '" + payroll.PagibigCalamity.Item + "', '" + payroll.GSIS_GFAL.Item + "', '" + payroll.GSIS_COMP.Item + "')" + (ctr == model.Count() ? "" : ", ");
             }
                 
 
@@ -265,7 +265,7 @@ namespace DOHPayroll.Databases
                     model.CFI.Item + "','" + model.GSIS_Premium + "','" + model.GSIS_Consoloan.Item + "','" + model.GSIS_PolicyLoan.Item + "','" + model.GSIS_EML.Item + "'," +
                     "'" + model.GSIS_UOLI.Item + "','" + model.GSIS_EDU.Item + "', '" + model.GSIS_Help.Item + "', '" + model.GSIS_Rel.Item + "','" + model.PagibigPremium + "'," +
                     "'" + model.PagibigLoan.Item + "', '" + model.Disallowances.Item + "', '" + model.Phic + "', '" + model.SIMC.Item + "', '" + model.HWMPC.Item + "', '" + model.DBP.Item + "'," +
-                    "'" + model.PagibigMP2.Item + "', '" + model.PagibigCalimity.Item + "', '" + model.GSIS_GFAL.Item + "', '" + model.GSIS_COMP.Item + "');";
+                    "'" + model.PagibigMP2.Item + "', '" + model.PagibigCalamity.Item + "', '" + model.GSIS_GFAL.Item + "', '" + model.GSIS_COMP.Item + "');";
 
             using (MySqlConnection connection = new MySqlConnection(CONNECTION_STRING))
             {
@@ -782,6 +782,8 @@ namespace DOHPayroll.Databases
             string query = "SELECT p.id, p.userid, p.month, p.year, p.absent_days, p.working_days, p.month_salary, p.pera, p.minutes_late, p.tax, " +
                 "p.cfi, ifnull(cfir.max, 0) as cfi_max, ifnull(cfir.count, 0) as cfi_ctr, " +
                 "p.gsis_premium, " +
+                "p.gsis_comp, ifnull(comp.max, 0) as gsis_comp_max, ifnull(comp.count, 0) as gsis_comp_ctr,   " +
+                "p.gsis_gfal, ifnull(gfal.max, 0) as gsis_gfal_max, ifnull(gfal.count, 0) as gsis_gfal_ctr,   " +
                 "p.gsis_consoloan, ifnull(gcr.max, 0) as gsis_consoloan_max, ifnull(gcr.count, 0) as gsis_consoloan_ctr,   " +
                 "p.gsis_policy_loan, ifnull(gpr.max, 0) as gsis_policy_loan_max, ifnull(gpr.count, 0) as gsis_policy_loan_ctr,   " +
                 "p.gsis_eml, ifnull(ger.max, 0) as gsis_eml_max, ifnull(ger.count, 0) as gsis_eml_ctr,   " +
@@ -801,6 +803,8 @@ namespace DOHPayroll.Databases
                 "FROM payroll.regular_payroll p " +
                 "LEFT JOIN pis.work_experience we ON we.userid = p.userid " +
                 "LEFT JOIN payroll.cfi_remittance cfir ON cfir.userid = p.userid " +
+                "LEFT JOIN payroll.gsis_comp_remittance comp ON comp.userid = p.userid " +
+                "LEFT JOIN payroll.gsis_gfal_remittance gfal ON gfal.userid = p.userid " +
                 "LEFT JOIN payroll.gsis_consoloan_remittance gcr ON gcr.userid = p.userid " +
                 "LEFT JOIN payroll.gsis_policyloan_remittance gpr ON gpr.userid = p.userid " +
                 "LEFT JOIN payroll.gsis_eml_remittance ger ON ger.userid = p.userid " +
@@ -833,6 +837,18 @@ namespace DOHPayroll.Databases
                 PERA = 0,
                 MinutesLate = min,
                 ProfessionalTax = 0,
+                GSIS_COMP = new LoanModel
+                {
+                    Item = 0,
+                    NoPayment = 0,
+                    NoPaid = 0
+                },
+                GSIS_GFAL = new LoanModel
+                {
+                    Item = 0,
+                    NoPayment = 0,
+                    NoPaid = 0
+                },
                 CFI = new LoanModel
                 {
                     Item = 0,
@@ -894,7 +910,7 @@ namespace DOHPayroll.Databases
                     NoPayment = 0,
                     NoPaid = 0
                 },
-                PagibigCalimity = new LoanModel
+                PagibigCalamity = new LoanModel
                 {
                     Item = 0,
                     NoPayment = 0,
@@ -999,7 +1015,7 @@ namespace DOHPayroll.Databases
                             NoPayment = int.Parse(reader["pagibig_mp2_max"].ToString()),
                             NoPaid = int.Parse(reader["pagibig_mp2_ctr"].ToString())
                         };
-                        payroll.PagibigCalimity = new LoanModel
+                        payroll.PagibigCalamity = new LoanModel
                         {
                             Item = double.Parse(reader["pagibig_calamity"].ToString()),
                             NoPayment = int.Parse(reader["pagibig_calamity_max"].ToString()),
@@ -1180,7 +1196,7 @@ namespace DOHPayroll.Databases
                     NoPayment = 0,
                     NoPaid = 0
                 },
-                PagibigCalimity = new LoanModel
+                PagibigCalamity = new LoanModel
                 {
                     Item = 0,
                     NoPayment = 0,
@@ -1298,7 +1314,7 @@ namespace DOHPayroll.Databases
                             NoPayment = int.Parse(reader["pagibig_mp2_max"].ToString()),
                             NoPaid = int.Parse(reader["pagibig_mp2_ctr"].ToString())
                         };
-                        payroll.PagibigCalimity = new LoanModel
+                        payroll.PagibigCalamity = new LoanModel
                         {
                             Item = double.Parse(reader["pagibig_calamity"].ToString()),
                             NoPayment = int.Parse(reader["pagibig_calamity_max"].ToString()),
@@ -1618,7 +1634,7 @@ namespace DOHPayroll.Databases
                                 NoPayment = int.Parse(reader["pagibig_mp2" + "_max"].ToString()),
                                 NoPaid = int.Parse(reader["pagibig_mp2" + "_ctr"].ToString())
                             },
-                            PagibigCalimity = new LoanModel
+                            PagibigCalamity = new LoanModel
                             {
                                 Item = double.Parse(reader["pagibig_calamity"].ToString()),
                                 NoPayment = int.Parse(reader["pagibig_calamity" + "_max"].ToString()),
@@ -1743,7 +1759,7 @@ namespace DOHPayroll.Databases
                             {
                                 Item = reader["pagibig_mp2"].ConvertDouble()
                             },
-                            PagibigCalimity = new LoanModel
+                            PagibigCalamity = new LoanModel
                             {
                                 Item = reader["pagibig_calamity"].ConvertDouble()
                             },
@@ -3168,7 +3184,7 @@ namespace DOHPayroll.Databases
                             {
                                 Item = double.Parse(reader["pagibig_mp2"].ToString())
                             },
-                            PagibigCalimity = new LoanModel
+                            PagibigCalamity = new LoanModel
                             {
                                 Item = double.Parse(reader["pagibig_calamity"].ToString())
                             },

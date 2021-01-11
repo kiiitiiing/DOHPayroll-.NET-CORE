@@ -25,7 +25,7 @@
                         </button>
                         @if (payroll.Month == DateTime.Now.Month && payroll.Year == DateTime.Now.Year)
                         {
-                            <button class="btn btn-sm btn-primary btn-margin-right">
+                            <button class="btn btn-sm btn-primary btn-margin-right" value="@payroll.PayrollId" data-params="@payroll.ID-@payroll.Fname-@payroll.Mname-@payroll.Lname-@payroll.Salary" onclick="UpdateRegularPayroll($(this));">
                                 <i class="fas fa-edit"></i>
                             </button>
                         }

@@ -2,24 +2,6 @@
     <!-- NAVBAR -->
     @if (User.FindFirstValue(ClaimTypes.Role) == "user")
     {
-        <li class="nav-item ">
-            <a class="nav-link" asp-area="" asp-controller="Resuhems" asp-action="Dashboard">
-                <i class="fa fa-home"></i>
-                &nbsp;Home
-            </a>
-        </li>
-        <li class="nav-item ">
-            <a class="nav-link" asp-area="" asp-controller="Resuhems" asp-action="DischargedPatients">
-                <i class="fas fa-user-injured"></i>
-                &nbsp;Discharged
-            </a>
-        </li>
-        <li class="nav-item ">
-            <a class="nav-link" asp-area="" asp-controller="Resuhems" asp-action="AddPatient">
-                <i class="fa fa-user-injured"></i>
-                &nbsp;Add patient
-            </a>
-        </li>
     }
 
     @if (User.FindFirstValue(ClaimTypes.Role) == "admin")

@@ -27,7 +27,7 @@ namespace DOHPayroll.Databases
                 if(INSTANCE == null)
                 {
                     INSTANCE = new DTSDatabase();
-                    INSTANCE.Initialize(0);
+                    INSTANCE.Initialize(1);
                 }
                 return INSTANCE;
             }

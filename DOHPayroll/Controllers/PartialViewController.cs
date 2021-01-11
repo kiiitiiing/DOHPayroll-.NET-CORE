@@ -61,9 +61,8 @@ namespace DOHPayroll.Controllers
 
         #region REGULAR PAYROLL
         [HttpGet]
-        public async Task<IActionResult> EditRegularPayroll(string userid, string fname, string mname, string lname, string salary)
+        public async Task<IActionResult> EditRegularPayroll(string userid, string fname, string mname, string lname, string salary, int? payrollId)
         {
-            int? payrollId = null;
             var payroll = await PayrollDatabase.Instance.GetRegularPayrollByID(userid, fname, mname, lname, salary, payrollId);
             return PartialView(payroll);
         }

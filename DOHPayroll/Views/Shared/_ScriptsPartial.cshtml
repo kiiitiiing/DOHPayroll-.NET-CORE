@@ -983,6 +983,61 @@
         });
     }
 
+    //UPDATE REGULAR PAYROLL
+    function UpdateRegularPayroll(button) {
+        var payrollId = $(button).val();
+        var userid = $(button).data('params').split('-')[0];
+        var fname = $(button).data('params').split('-')[1];
+        var mname = $(button).data('params').split('-')[2];
+        var lname = $(button).data('params').split('-')[3];
+        var salary = $(button).data('params').split('-')[4];
+        var url = '@Url.Action("EditRegularPayroll", "PartialView")';
+        $.when($.ajax({
+            url: url,
+            type: 'get',
+            data: {
+                userid: userid,
+                fname: fname,
+                mname: mname,
+                lname: lname,
+                salary: salary,
+                payrollId: payrollId
+            },
+            async: true,
+            beforeSend: function () {
+                if ($('#' + rePayrollContainer).children().length > 0) {
+                    $(window).scrollTop($('#' + rePayrollContainer).offset().top);
+                    $('#' + rePayrollContainer).find('.card').append(loadingSnippet);
+                }
+                else {
+                    $(window).scrollTop($('#' + rePayrollContainer).offset().top);
+                    $('#' + rePayrollContainer).append(loadingSnippetDiv);
+                }
+            },
+            success: function (output) {
+                if ($('#' + rePayrollContainer).children().length > 0) {
+                    $('#spinner_overlay').remove();
+                }
+                else {
+                    $('#spinner_card').remove();
+                }
+                $('#' + rePayrollContainer).html(output);
+                $(window).scrollTop($('#' + rePayrollContainer).offset().top);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                if (xhr.status === 401) {
+                    location.reload();
+                }
+                else {
+                    alert(xhr.responseText);
+                    alert(thrownError);
+                }
+            }
+        })).done(function (e) {
+            LoadRegularPayrollList(userid);
+        });
+    }
+
     //LOAD JOB ORDER PAYROLL AND PAYROLL LIST
     function LoadJoPayrollandList(row) {
         var userid = row.find('td:eq(0)').text().trim();

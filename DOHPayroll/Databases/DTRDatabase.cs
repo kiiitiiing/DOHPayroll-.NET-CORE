@@ -25,7 +25,7 @@ namespace DOHPayroll.Databases
                 if(INSTANCE == null)
                 {
                     INSTANCE = new DTRDatabase();
-                    INSTANCE.Initialize(0);
+                    INSTANCE.Initialize(1);
                 }
                 return INSTANCE;
             }
@@ -85,6 +85,7 @@ namespace DOHPayroll.Databases
             return users.FirstOrDefault();
         }
         #endregion
+
         #region GET MINS LATE AND ABSENSES
         public async Task<(int, string, double)> GetMinsV2Async(string userid, DateTime from, DateTime to, string job_status)
         {
@@ -187,6 +188,7 @@ namespace DOHPayroll.Databases
             return false;
         }
         #endregion
+
         #region CHECK IF HOLIDAY
         public bool IsHoliday(string date)
         {

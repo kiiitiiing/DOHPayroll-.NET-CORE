@@ -23,7 +23,7 @@ namespace DOHPayroll.ViewModels
         {
             get
             {
-                return PagibigPremium + PagibigLoan.Item + PagibigMP2.Item + PagibigCalimity.Item;
+                return PagibigPremium + PagibigLoan.Item + PagibigMP2.Item + PagibigCalamity.Item;
             }
         }
         public double TotalGsis
@@ -134,7 +134,7 @@ namespace DOHPayroll.ViewModels
         public double PagibigPremium { get; set; }
         public LoanModel PagibigLoan { get; set; }
         public LoanModel PagibigMP2 { get; set; }
-        public LoanModel PagibigCalimity { get; set; }
+        public LoanModel PagibigCalamity { get; set; }
         [Required]
         public double Phic
         {
