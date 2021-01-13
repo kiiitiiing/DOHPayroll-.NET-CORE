@@ -1685,7 +1685,7 @@ namespace DOHPayroll.Controllers
 
         public byte[] SetPDF(string regularPayrolls, string document_title)
         {
-            new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            //new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
             var globalSettings = new GlobalSettings
             {
                 ColorMode = ColorMode.Color,

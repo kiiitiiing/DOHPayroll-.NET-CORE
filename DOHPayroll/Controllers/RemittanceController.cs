@@ -63,7 +63,7 @@ namespace DOHPayroll.Controllers
                 var stream = SetExcel(pagibigList,"REGULAR");
 
                 stream.Position = 0;
-                string excelName = "DOH RO7 " + StartDate.Year + "" + StartDate.ToString("MM") + " - REGULAR (MDS - CONTRIBUTION AND LOAN PAYMENT.xlsx)";
+                string excelName = "DOH RO7 " + StartDate.Year + "" + StartDate.ToString("MM") + " - REGULAR (MDS - CONTRIBUTION AND LOAN PAYMENT).xlsx";
 
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
             }
@@ -104,7 +104,7 @@ namespace DOHPayroll.Controllers
                 var stream = SetExcel(pagibigList,"JOB ORDER");
 
                 stream.Position = 0;
-                string excelName = "DOH RO7 " + StartDate.Year + "" + StartDate.ToString("MM") + " - JOB ORDER (MDS - CONTRIBUTION AND LOAN PAYMENT.xlsx)";
+                string excelName = "DOH RO7 " + StartDate.Year + "" + StartDate.ToString("MM") + " - JOB ORDER (MDS - CONTRIBUTION AND LOAN PAYMENT).xlsx";
 
                 return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
             }
@@ -947,7 +947,7 @@ namespace DOHPayroll.Controllers
 
         public byte[] SetPDF(string regularPayrolls, string document_title, Orientation test)
         {
-            new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            //new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
             var globalSettings = new GlobalSettings
             {
                 ColorMode = ColorMode.Color,

@@ -38,6 +38,7 @@ namespace DOHPayroll.Controllers
         }
 
         #region REGULAR PAYSLIP
+        [HttpGet]
         public async Task<IActionResult> RegularPayslip(string userid, int month, int year)
         {
             StartDate = new DateTime(year, month, 1);
@@ -51,7 +52,21 @@ namespace DOHPayroll.Controllers
         }
         #endregion
 
+        #region TEST
+        public IActionResult Potangina()
+        {
+            //var model = await PayrollDatabase.Instance.GetJoPayrollByID(userid, fname, mname, lname, salary, payrollId);
+
+            var content = "POTANG INAA NETOOOO!!";
+
+            var file = SetPDF(content, "PAKING SHET");
+
+            return File(file, "application/pdf");
+        }
+        #endregion
+
         #region JOB ORDER PAYSLIP 
+        [HttpGet]
         public async Task<IActionResult> JoPayslip(string userid, string fname, string mname, string lname, string salary, int payrollId)
         {
             var model = await PayrollDatabase.Instance.GetJoPayrollByID(userid, fname, mname, lname, salary, payrollId);
@@ -1354,7 +1369,7 @@ namespace DOHPayroll.Controllers
         }
         public byte[] SetPDF(string content, string title)
         {
-            new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            //new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
             var globalSettings = new GlobalSettings
             {
                 ColorMode = ColorMode.Color,

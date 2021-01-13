@@ -53,7 +53,7 @@ namespace DOHPayroll
         public byte[] GeneratePdf()
         {
             SetContent();
-            new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            //new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
             var globalSettings = new GlobalSettings
             {
                 ColorMode = this.ColorMode,

@@ -1319,7 +1319,7 @@ namespace DOHPayroll.Controllers
         #region HELPERS
         public byte[] SetPDF(string regularPayrolls, string document_title, Orientation orientation, PaperKind paperSize)
         {
-            new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            //new CustomAssemblyLoadContext().LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
             var globalSettings = new GlobalSettings
             {
                 ColorMode = ColorMode.Color,

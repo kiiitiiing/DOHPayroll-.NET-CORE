@@ -1041,10 +1041,10 @@
     //LOAD JOB ORDER PAYROLL AND PAYROLL LIST
     function LoadJoPayrollandList(row) {
         var userid = row.find('td:eq(0)').text().trim();
-        var fname = row.find('td:eq(4)').text().trim();
-        var mname = row.find('td:eq(5)').text().trim();
-        var lname = row.find('td:eq(6)').text().trim();
-        var salary = row.find('td:eq(3)').text().trim();
+        var fname = row.find('td:eq(5)').text().trim();
+        var mname = row.find('td:eq(6)').text().trim();
+        var lname = row.find('td:eq(7)').text().trim();
+        var salary = row.find('td:eq(4)').text().trim();
         var url = '@Url.Action("EditJoPayroll","PartialView")';
         $.when($.ajax({
             url: url,
@@ -1095,9 +1095,9 @@
     function LoadHazardAndList(row) {
         var reCont = $('#' + rePayrollContainer);
         var userid = row.find('td:eq(0)').text().trim();
-        var fname = row.find('td:eq(4)').text().trim();
-        var mname = row.find('td:eq(5)').text().trim();
-        var lname = row.find('td:eq(6)').text().trim();
+        var fname = row.find('td:eq(5)').text().trim();
+        var mname = row.find('td:eq(6)').text().trim();
+        var lname = row.find('td:eq(7)').text().trim();
         var url = '@Url.Action("GenerateHazard", "PartialView")';
         $.when($.ajax({
             url: url,
@@ -1177,9 +1177,9 @@
     function LoadCellphoneAndList(row) {
         var reCont = $('#' + rePayrollContainer);
         var userid = row.find('td:eq(0)').text().trim();
-        var fname = row.find('td:eq(4)').text().trim();
-        var mname = row.find('td:eq(5)').text().trim();
-        var lname = row.find('td:eq(6)').text().trim();
+        var fname = row.find('td:eq(5)').text().trim();
+        var mname = row.find('td:eq(6)').text().trim();
+        var lname = row.find('td:eq(7)').text().trim();
         var url = '@Url.Action("GenerateCellphone", "PartialView")';
         $.when($.ajax({
             url: url,
@@ -1259,9 +1259,9 @@
     function LoadLongevityAndList(row) {
         var reCont = $('#' + rePayrollContainer);
         var userid = row.find('td:eq(0)').text().trim();
-        var fname = row.find('td:eq(4)').text().trim();
-        var mname = row.find('td:eq(5)').text().trim();
-        var lname = row.find('td:eq(6)').text().trim();
+        var fname = row.find('td:eq(5)').text().trim();
+        var mname = row.find('td:eq(6)').text().trim();
+        var lname = row.find('td:eq(7)').text().trim();
         var url = '@Url.Action("GenerateLongevity", "PartialView")';
         $.when($.ajax({
             url: url,
@@ -1342,9 +1342,9 @@
     function LoadSubsistenceAndList(row) {
         var reCont = $('#' + rePayrollContainer);
         var userid = row.find('td:eq(0)').text().trim();
-        var fname = row.find('td:eq(4)').text().trim();
-        var mname = row.find('td:eq(5)').text().trim();
-        var lname = row.find('td:eq(6)').text().trim();
+        var fname = row.find('td:eq(5)').text().trim();
+        var mname = row.find('td:eq(6)').text().trim();
+        var lname = row.find('td:eq(7)').text().trim();
         var url = '@Url.Action("GenerateSubsistence", "PartialView")';
         $.when($.ajax({
             url: url,
@@ -1432,9 +1432,9 @@
     function LoadRataAndList(row) {
         var reCont = $('#' + rePayrollContainer);
         var userid = row.find('td:eq(0)').text().trim();
-        var fname = row.find('td:eq(4)').text().trim();
-        var mname = row.find('td:eq(5)').text().trim();
-        var lname = row.find('td:eq(6)').text().trim();
+        var fname = row.find('td:eq(5)').text().trim();
+        var mname = row.find('td:eq(6)').text().trim();
+        var lname = row.find('td:eq(7)').text().trim();
         var url = '@Url.Action("GenerateRATA", "PartialView")';
         $.when($.ajax({
             url: url,
@@ -1514,10 +1514,10 @@
     function LoadRegularPayrollandList(row) {
         var reCont = $('#' + rePayrollContainer);
         var userid = row.find('td:eq(0)').text().trim();
-        var fname = row.find('td:eq(4)').text().trim();
-        var mname = row.find('td:eq(5)').text().trim();
-        var lname = row.find('td:eq(6)').text().trim();
-        var salary = row.find('td:eq(3)').text().trim();
+        var fname = row.find('td:eq(5)').text().trim();
+        var mname = row.find('td:eq(6)').text().trim();
+        var lname = row.find('td:eq(7)').text().trim();
+        var salary = row.find('td:eq(4)').text().trim();
         var url = '@Url.Action("EditRegularPayroll","PartialView")';
         $.when($.ajax({
             url: url,

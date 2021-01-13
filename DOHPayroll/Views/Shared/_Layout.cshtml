@@ -43,41 +43,41 @@
     <script src="~/assets/dist/js/notifications.js"></script>
     <script type="text/javascript" src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script type="text/javascript" src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <partial name="~/Views/Shared/_ScriptsPartial.cshtml" />
 </head>
 <body>
+    <partial name="~/Views/Shared/_ScriptsPartial.cshtml" />
     <header>
         @if (User.Identity.IsAuthenticated)
         {
-            <div class="header" style="background-color:#2F4054;padding:10px;">
-                <div class="">
-                    <div class="col-md-4 fa-pull-left">
-                        <span class="title-desc" style="color:coral;font-weight:bold">Welcome,</span> <span class="title-desc" style="color:whitesmoke;font-weight:bold"> @User.FindFirstValue(ClaimTypes.GivenName) @User.FindFirstValue(ClaimTypes.Surname)  </span>
-                    </div>
-                    <div class="col-md-4 fa-pull-left">
-                        <span class="title-desc" style="color:whitesmoke;font-weight:bold"> @User.FindFirstValue("Position")</span>
-                    </div>
-                    <div class="col-md-4 fa-pull-right text-right">
-                        <span class="title-desc" style="color:coral;font-weight:bold">Date: </span><span class="title-desc" style="color:whitesmoke;font-weight:bold">@DateTime.Now.ToString("dd/MM/yyyy") <span id="time-top"></span></span>
-                    </div>
-                    <div class="clearfix"></div>
+        <div class="header" style="background-color:#2F4054;padding:10px;">
+            <div class="">
+                <div class="col-md-4 fa-pull-left">
+                    <span class="title-desc" style="color:coral;font-weight:bold">Welcome,</span> <span class="title-desc" style="color:whitesmoke;font-weight:bold"> @User.FindFirstValue(ClaimTypes.GivenName) @User.FindFirstValue(ClaimTypes.Surname)  </span>
+                </div>
+                <div class="col-md-4 fa-pull-left">
+                    <span class="title-desc" style="color:whitesmoke;font-weight:bold"> @User.FindFirstValue("Position")</span>
+                </div>
+                <div class="col-md-4 fa-pull-right text-right">
+                    <span class="title-desc" style="color:coral;font-weight:bold">Date: </span><span class="title-desc" style="color:whitesmoke;font-weight:bold">@DateTime.Now.ToString("dd/MM/yyyy") <span id="time-top"></span></span>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="header" style="background-color:#cf8ac9;padding:5px;">
+            <div class="container">
+                <img src="~/img/banner2019.png" class="img-responsive" alt="banner" />
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-light navbar-white custom-nav">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <partial name="~/Views/Shared/NavBar/_NavBarPartial.cshtml" />
                 </div>
             </div>
-            <div class="header" style="background-color:#cf8ac9;padding:5px;">
-                <div class="container">
-                    <img src="~/img/banner2019.png" class="img-responsive" alt="banner" />
-                </div>
-            </div>
-            <nav class="navbar navbar-expand-md navbar-light navbar-white custom-nav">
-                <div class="container">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse order-3" id="navbarCollapse">
-                        <partial name="~/Views/Shared/NavBar/_NavBarPartial.cshtml" />
-                    </div>
-                </div>
-            </nav>
+        </nav>
         }
     </header>
     @{
@@ -113,7 +113,7 @@
                                         <option value="">Select Salary Grade</option>
                                         @for (int x = 1; x <= 33; x++)
                                         {
-                                            <option value="@x">@x</option>
+                                        <option value="@x">@x</option>
                                         }
                                     </select>
                                 </div>
@@ -124,7 +124,7 @@
                                         <option value="">Select Salary Step</option>
                                         @for (int x = 1; x <= 8; x++)
                                         {
-                                            <option value="@x">@x</option>
+                                        <option value="@x">@x</option>
                                         }
                                     </select>
                                 </div>

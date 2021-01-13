@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.0" />
     <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="DotNetCorePdf" Version="1.0.3" />
     <PackageReference Include="EPPlus" Version="5.4.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
       <PrivateAssets>all</PrivateAssets>
